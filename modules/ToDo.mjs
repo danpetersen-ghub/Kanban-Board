@@ -7,14 +7,18 @@
 @method markDone() - marks the task as done
 */
 class ToDo {
-    constructor(task) {
+    constructor(task, id) {
         this.task = task;
         this.created = new Date().toISOString();
         this.status = 'To Do';
+        this.id = id;
+    }   
+    markDone(task) {
+        this.status = 'Done';
     }
-    save() {}
-    markDone() {}
-    delete() {}
+   log() {
+         console.log(this.task);
+   }
 }
 
-export default ToDo 
+export default ToDo; 
