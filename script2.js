@@ -32,7 +32,7 @@ document.getElementById("create").addEventListener("click", function() {
     let userInput = document.getElementById("task-input");
     let taskText = userInput.value; 
     taskList.addTask(new ToDo(taskText, taskList.nextId()))
-    database.add(taskList.tasks);
+    database.add( 'tasks' , taskList.tasks);
     taskList.render();
     userInput.value = "";
 });
