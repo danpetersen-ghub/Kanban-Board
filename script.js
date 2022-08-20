@@ -1,132 +1,95 @@
-console.log(`reload.........`);
+import  ToDo  from "./modules/ToDo.mjs";
+import  TaskList  from "./modules/TaskList.mjs";    
+import IndexDB from "./modules/IndexDB.mjs";
+import dragDropModule from "./modules/dragandDrop.mjs";
 
-//global 
-let toDoArr = [
-    { task: "abc", done: false, status: "To Do", created: "2022-08-15T06:57:32.051Z" },
-]
-var createButton = document.getElementById("create");
-var save = document.getElementById("save");
-var clear = document.getElementById("clear");
+const taskList = new TaskList();
+const database = new IndexDB();
+const dragDrop  =  new dragDropModule() ;
 
-//todo constructor
-function ToDo(task) {
-    this.task = task;
-    this.done = false;
-    this.status = 'To Do';
-    this.created = new Date().toISOString();
+//database.createDB();
+
+
+//SCOPE
+const Scope = { 
 }
 
-//functions
-function createTaskElements() {
-    if (!window.localStorage.saveFile) { return } 
-    let listArea = document.getElementById("list");
-    let listHTMLArray = toDoArr.map( (task) => {  `<p>${created} - ${task}</p>` });
-    listHTMLArray.forEach(task => { 
-        let DIV = document.createElement("DIV");
-        DIV.innerHTML = task;
-        listArea.appendChild(DIV);  
-     });
-}
+//EVENT LISTENERS
+//@listener - event listener  - Page Load
+window.addEventListener('load', (event) => {
+    console.log('page is fully loaded');
 
-// addTasksToUIFromArray = (array) => {
-//     document.getElementById("list").innerHTML= "";
-//     for (var i = 0; i < array.length; i++) {
-//        let  task = array[i];
-//        createTaskElement(task);
-//     }
-// }
+    let userInput = document.getElementById("task-input");
+    userInput.value = "";
 
-function taskDone(array, value) {
-    removeItemOnce(array, value)   
-    createTaskElements();
-    saveToLocalStorage();
-}
+    taskList.addTask(new ToDo("Buy milk", taskList.nextId()));
 
-function removeItemOnce(arr, value) {
-    var index = arr.indexOf(value);
-    if (index > -1) {
-      arr.splice(index, 1);
-    }
-    return arr;
-    
-  }
+    taskList.render();
 
-// function createTaskElements() {
-//     let listArea = document.getElementById("list");
-//     let listHTMLArray = toDoArr.map( task => {  `<p>${created} - ${task}</p>` });
-//     listHTMLArray.forEach(task => {  listArea.appendChild(task);   });
-// }
+    // ondrop="dragDrop.drop(event)" ondragover="dragDrop.allowDrop(event)">
+    document.querySelectorAll(".task-column").forEach(column => {
+        column.addEventListener("drop", function(event) {
+            dragDrop.drop(event)
+         });
+        column.addEventListener("dragover", function(event) {
+            dragDrop.allowDrop(event)
+        });
+    });
 
-// createTaskElement = (task) => {
-//     var p = document.createElement("P");
-//     // p.innerHTML = `<p>
-//     // <button class="done-task" onclick="taskDone( toDoArr, '${task}')" >&#10004;</button>  
-//     // ${task}
-//     // </p>`;
-//     // p.innerHTML = `<p>${created} - ${task}</p>`;
-//     let list = document.getElementById("list");
-//     list.appendChild(p);
-    
-// }
+   //  ondragstart="dragDrop.drag(event)" >
+   document.querySelectorAll(".card").forEach(function(task) {
+        //Attempt 5 
+        task.addEventListener("dragstart", function(event) {
+            // console.log('CLICK' )
+            // console.log('THIS is:' )
+            // console.log( this )
+            // console.log('EVENT is: ' )
+            // console.log( event )
 
-function makeNewTask() {
-    let userInput = document.getElementsByTagName("input")[0].value;
-    if (userInput === "") { return } 
-    let task = new ToDo(userInput);
-    console.log(task);
-    toDoArr.push(task);
-    createTaskElements();
-     document.getElementsByTagName("input")[0].value = "";
-     saveToLocalStorage();
- }
+            // console.log('EVENT TARGET is: ' )
+            // console.log( event.target )
 
- function saveToLocalStorage() {
-    if (window.localStorage.saveFile) {
-        window.localStorage.removeItem('saveFile');
-        let storage = JSON.stringify(toDoArr);
-        console.log(storage);
-        window.localStorage.setItem('saveFile', );
-    } else  window.localStorage.setItem('saveFile', toDoArr);
- }
+            // console.log('____DragDrop Functions ' )
+            // dragDrop.log(event)
+            dragDrop.drag(event)
+         });
+    });
+  });
 
 
 
-//_______________EVENTS_______________ */
-
-//on page load 
-if (window.localStorage.saveFile) {
-        //saveFileAsString = localStorage.saveFile;
-        //let saveFileSplit = saveFileAsString.split(",");
-        // toDoArr = saveFileSplit;
-        
-       
-       // let toDoArr = JSON.parse(window.localStorage.saveFile);
-        //console.log(toDoArr);
-        createTaskElements();
-}
-// */
-
-
-// Add new To Do Item
-createButton.addEventListener("click", function() {
-     makeNewTask();
-} );
+// @listener - event listener  - Save 
+document.getElementById("create").addEventListener("click", function() {
+    let userInput = document.getElementById("task-input");
+    let taskText = userInput.value; 
+    taskList.addTask(new ToDo(taskText, taskList.nextId()))
+    database.add( 'tasks' , taskList.tasks);
+    taskList.render();
+    userInput.value = "";
+});
 
 document.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        console.log("Enter was pressed");
-        makeNewTask();
+    let userInput = document.getElementById("task-input");
+    if (e.key === 'Enter' && userInput.value != "")  {       
+       
+        let taskText = userInput.value; 
+        taskList.addTask(new ToDo(taskText, taskList.nextId()));
+        console.log(taskText);
+        taskList.render();
+        userInput.value = "";
     }
 });
 
-//Save to local storage
-save.addEventListener("click", function() {
-     saveToLocalStorage();
+document.addEventListener("click", function(e) {
+   
+  if(e.target.className !== "done-task") {    return;  }
+
+  console.log(e.target.dataset.id);
+  taskList.removeTask(e.target.dataset.id);
 });
 
-//clear local storage
-clear.addEventListener("click", function() { 
-    window.localStorage.removeItem('saveFile');
-    location.reload(); 
-});
 
+// @listener - event listener - Delete Storage
+// document.getElementById("clear").addEventListener("click", function() {
+//    database.deleteDB();
+// });
