@@ -9,7 +9,7 @@
 class ToDo {
     constructor(task, id) {
         this.task = task;
-        this.created = new Date().toISOString();
+        this.created = new Date().toLocaleDateString('en-GB');
         this.status = 'To Do';
         this.id = id;
     }   
