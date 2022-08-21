@@ -55,6 +55,9 @@ hr {
     padding: 0px !important; 
     font-size: 11px !important; 
 }
+.card {
+    margin-top:5px;
+}
 
 .input-area {
     width: 100%;
@@ -91,7 +94,7 @@ div {min-width: 400px;}
     background-color: #0093E9;
     border-radius:5px !important;
     border: 1px solid #FFF;
-    margin: 5px;
+    margin: 3px;
   }
 
   .task-column{
