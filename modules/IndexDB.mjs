@@ -7,15 +7,17 @@
 */
 class indexDB {
   constructor() {
-      this.db = null;
+      this.db,
       this.dbName = "ToDoApp";
       this.dbVersion = 3;
-      this.stores = "tasks";
+      this.store = "tasks";
   }
 
   createDB() {
-      let request = window.indexedDB.open(this.dbName, this.dbVersion);
-      console.log(request);
+      const request = window.indexedDB.open(this.dbName, this.dbVersion);
+    //  console.log(request);
+     // console.log(request.result);
+    //   this.db = request.result;
 
       request.onerror = (event) => {
           // Do something with request.errorCode!
@@ -23,43 +25,55 @@ class indexDB {
       };
 
       request.onsuccess = (event) => {
-         this.db = event.target.result;
-         console.log('onsuccess');
-         console.log(this);
-
-          // Create an objectStore to hold information about our customers. We're
-          // going to use "ssn" as our key path because it's guaranteed to be
-          // unique - or at least that's what I was told during the kickoff meeting.
-          const objectStore = this.db.createObjectStore(this.dbName, {  keyPath: "id"   });
-
-         //Create index for the objectStore
-          objectStore.createIndex(this.dbName, "id", {unique: true}); 
-
+        //  this.db = request.result;
+          console.log('onsuccess - DB created: ');
+          console.log(event);
+          console.log(request.result);
+          this.db = request.result;
+          console.log(this.db);
+         
       }
       request.onupgradeneeded = e => {
-        console.log('onupgradeneeded');
+        console.log('onupgradeneeded: ');
         this.db = e.target.result;
         this.db.onabort = e2 => callback(e2.target.error);
         this.db.error = e2 => callback(e2.target.error);
         this.db.oncomplete = e2 => {
-          stores.forEach((o) => {
-            this.db.createObjectStore(o.name, o.option);
-          });
+          console.log("db upgrade complete");
+          }
         }
+        
+    }
+    createStore(){
+
+        console.log(this);
+        console.log(this.db);
+        //Create Store
+        this.db.createObjectStore(this.store);
+        console.log("Store created: ");
+        console.log(store);
+
+
+        //Create index for the objectStore
+        objectStore.createIndex(this.store, "id", {unique: true}); 
+        console.log("index created for ID");
+
     }
 
-  }
-  
+  add(objects) {
+    
+        //Create Transaction
+        let transaction = this.db.transaction( [this.store], IDBTransaction.READ_WRITE, 2000);
+        transaction.oncomplete = (event) => {
+            console.log("Transaction completed: database modification finished.");
+        }
 
-  add(store, objects) {
-     console.log(this);
-      let transaction = this.db.transaction( [store], IDBTransaction.READ_WRITE);
-      transaction.oncomplete = (event) => {
-          console.log("Transaction completed: database modification finished.");
-      }
-      let request = transaction.objectStore(storeName).put(objects);
-      request.onerror = e => callback(e.target.error);
-      request.onsuccess = e => callback(e.target.result);
+        //Create request tp put data in to Store via transaction
+        let request = transaction.objectStore(storeName).put(objects);
+        request.onerror = e => callback(e.target.error);
+        request.onsuccess = e => callback(e.target.result);
+            
+
   }
 
   get(id) {
@@ -82,6 +96,13 @@ class indexDB {
       requestUpdate.onsuccess = (event) => {
           // Success - the data is updated!
       };
+  }
+  deleteDB() {
+
+  }
+  log(){
+    console.log('THIS is:' )
+    console.log(this)
   }
 
 }
