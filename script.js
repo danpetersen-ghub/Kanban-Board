@@ -7,25 +7,6 @@ const taskList = new TaskList();
 //const database = new IndexDB();
 const dragDrop = new dragDropModule() ;
 
-// if (window.indexedDB){
-//     console.log("Database exists:")
-//     console.log(window.indexedDB)
-// }
-//database.createDB();
-
-// .then( function(){
-//         //LAST SAVE - Seeing if the promise 
-//         console.log(database.db);
-//         database.createStore();
-// });
-// database.log();
-
-// console.log("Database is: ")
-// console.log(database)
-
-
-// database.createStore();
-
 /*
 indexDB Example from: 
 https://github.com/mdn/to-do-notifications/blob/gh-pages/scripts/todo.js
@@ -37,11 +18,17 @@ var db;
 const DBOpenRequest = window.indexedDB.open('Tasks', 4);
 
 DBOpenRequest.onsuccess = (event) => {
+    console.log('onsuccess is called')
     // Store the result of opening the database in the db variable. This is used a lot below
     db = DBOpenRequest.result;
+
+    //pull existing IndexDB records to our Tasklist
+    getAllDatabaseRecord();
 };
 
 DBOpenRequest.onupgradeneeded = (event) => {
+
+    //return the promise result for future use 
     db = event.target.result;
 
     db.onerror = (event) => {
@@ -54,6 +41,8 @@ DBOpenRequest.onupgradeneeded = (event) => {
     // Define what data items the objectStore will contain
     objectStore.createIndex('id', 'id', { unique: true});
 
+    //pull existing IndexDB records to our Tasklist
+    getAllDatabaseRecord();
   };
 
 //SCOPE
@@ -62,6 +51,8 @@ const Scope = {
 
 
 //FUNCTIONS
+
+//Adding drag and drop event listeners to the task tiles 
 function AddListenerToCards(){
     document.querySelectorAll(".card").forEach(function(task) {
         //Attempt 5 
@@ -81,13 +72,16 @@ function AddListenerToCards(){
         });
     });
 }
+
+//Add object to IndexDB
 function  addDatabaseRecord(object) {
     console.log('addDatabaseRecord called')
+
     //Create Transaction
     let transaction = db.transaction( ['tasklist'], 'readwrite');
 
 
-    //Create request tp put data in to Store via transaction
+    //Create request to put data in to Store via transaction
     let request = transaction.objectStore('tasklist');
     request.onerror = e => callback(e.target.error);
     request.onsuccess = e => callback(e.target.result);
@@ -96,19 +90,58 @@ function  addDatabaseRecord(object) {
     transaction.oncomplete = (event) => {
       console.log("Transaction completed: database modification finished.");
   }
+
+  //Now we can create the Store (some refer to this as the table)
   const objectStore = transaction.objectStore('tasklist');
+  
+
+  //Add the Object to the Store
   const objectStoreRequest = objectStore.add(object)
   objectStoreRequest.onsuccess = (event) => {
     console.log(event);
   }
+}
+
+function  getAllDatabaseRecord(id) {
+    console.log('getAllDatabaseRecord called')
+
+    //Create Transaction
+    let transaction = db.transaction( ['tasklist'], 'readwrite');
+
+    //Create request to put data in to Store via transaction
+    let request = transaction.objectStore('tasklist');
+    request.onerror = e => callback(e.target.error);
+    request.onsuccess = e => callback(e.target.result);
+    
+
+    transaction.oncomplete = (event) => {
+      console.log("Transaction completed: database modification finished.");
+  }
+
+  //Now we can create the Store (some refer to this as the table)
+  const objectStore = transaction.objectStore('tasklist');
+  
+
+  //get the Object to the Store
+  //@desc If nothing is passed, this will default to a key range that selects all the records in this object store. 
+  
+  const objectStoreRequest = objectStore.getAll(id);
+  objectStoreRequest.onsuccess = (event) => {
+    console.log(event);
+    taskList.tasks  = event.target.result;
+  }
+
+  
+  console.log(taskList.tasks);
 
 
 }
+
 //EVENT LISTENERS
 
 //@listener - event listener  - Page Load
 window.addEventListener('load', (event) => {
-    //console.log('page is fully loaded');
+    console.log('page is fully loaded');
 
     // ondrop="dragDrop.drop(event)" ondragover="dragDrop.allowDrop(event)">
     document.querySelectorAll(".task-column").forEach(column => {
@@ -119,21 +152,13 @@ window.addEventListener('load', (event) => {
             dragDrop.allowDrop(event)
         });
     });
-    
 
     let userInput = document.getElementById("task-input");
     userInput.value = "";
 
     taskList.render();
     AddListenerToCards();
-
-    
-
 });
-
-
- 
-
 
 
 // @listener - event listener  - Save Button Clicked
@@ -160,27 +185,38 @@ document.getElementById("create").addEventListener("click", function() {
 
     //Clean the input for future tasks 
     userInput.value = "";
-
-
 });
 
 // @listener - event listener  - Save via Enter Key
 document.addEventListener('keypress', function (e) {
     let userInput = document.getElementById("task-input");
     if (e.key === 'Enter' && userInput.value != "")  {       
-       
+        let userInput = document.getElementById("task-input");
         let taskText = userInput.value; 
-        taskList.addTask(new ToDo(taskText, taskList.nextId()));
-        console.log(taskText);
+    
+        //create a task Obj
+        let task = new ToDo(taskText, taskList.nextId())
+        console.log('TASK is:');
+        console.log(task);
+    
+        //Add task to Task List Array 
+        taskList.addTask(task)
+    
+        //Add Task to IndexDB
+        addDatabaseRecord(task);
+    
+        //Update the UI
         taskList.render();
+    
+        //Add Drag & Drop listners
         AddListenerToCards();
+    
+        //Clean the input for future tasks 
         userInput.value = "";
-
-
-        //database.add(TaskList.Tasks)
     }
 });
 
+//Delete Tasks
 document.addEventListener("click", function(e) {
    
   if(e.target.className !== "done-task") {    return;  }

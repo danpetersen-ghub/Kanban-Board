@@ -64,15 +64,16 @@ class indexDB {
     
         //Create Transaction
         let transaction = this.db.transaction( [this.store], IDBTransaction.READ_WRITE, 2000);
-        transaction.oncomplete = (event) => {
-            console.log("Transaction completed: database modification finished.");
-        }
+
 
         //Create request tp put data in to Store via transaction
         let request = transaction.objectStore(storeName).put(objects);
         request.onerror = e => callback(e.target.error);
         request.onsuccess = e => callback(e.target.result);
-            
+        
+        transaction.oncomplete = (event) => {
+          console.log("Transaction completed: database modification finished.");
+      }
 
   }
 
