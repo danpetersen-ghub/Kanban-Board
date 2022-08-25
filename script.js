@@ -102,6 +102,7 @@ function  addDatabaseRecord(object) {
   }
 }
 
+//get the IndexDb records and update the Tasklist Array
 function  getAllDatabaseRecord(id) {
     console.log('getAllDatabaseRecord called')
 
@@ -129,6 +130,8 @@ function  getAllDatabaseRecord(id) {
   objectStoreRequest.onsuccess = (event) => {
     console.log(event);
     taskList.tasks  = event.target.result;
+    taskList.render();
+    AddListenerToCards();
   }
 
   

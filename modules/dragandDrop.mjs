@@ -12,7 +12,7 @@ class dragDrop {
         // console.log(ev.target.id);
         // console.log(ev.target.innerHTML);
         ev.currentTarget.style.border = "medium dashed aqua";
-        console.log(ev)
+        console.log(ev);
         ev.dataTransfer.setData("text/plain", ev.target.id);
       }
       
