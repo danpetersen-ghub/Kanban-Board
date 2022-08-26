@@ -13,7 +13,8 @@ class TaskList {
             "To Do",
             "In Progress",
             "Done"
-        ]
+        ],
+        this.selectedTask = null
     }
     addTask(task) {
         this.tasks.push(task);
