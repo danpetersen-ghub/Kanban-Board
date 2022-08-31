@@ -4,8 +4,8 @@ https://stackoverflow.com/questions/43727516/how-adding-event-handler-inside-a-c
 */
 class dragDrop {
     constructor(){
-      this.selected = null;
-      this.placed = null;
+      this.selectedTask = null;
+      this.placedStatus = null;
 
     }
     allowDrop = (ev) => {
@@ -17,20 +17,23 @@ class dragDrop {
         // console.log(ev.target.id);
         // console.log(ev.target.innerHTML);
         ev.currentTarget.style.border = "medium dashed aqua";
-        console.log(ev);
+        //console.log(ev);
         ev.dataTransfer.setData("text/plain", ev.target.id);
-        //tasklist.selectedTask  =  ev.target.id;
+        this.selectedTask  =  ev.target.id;
+        this.placed = "";
+        console.log(this);
         return  ev.target.id
       }
       
     drop = (ev) => {
         ev.preventDefault();
         console.log('User has dropped');
-        console.log(ev);
+        //console.log(ev);
         let data = ev.dataTransfer.getData("text");
         ev.target.appendChild(document.getElementById(data));
         document.getElementById(data).style.border = "none";
-        tasklist.tasks[ tasklist.selectedTask ].status = ev.originalTarget.dataset.status 
+        this.placedStatus = ev.originalTarget.dataset.status; 
+        console.log(this);
 
       }
 

@@ -69,6 +69,7 @@ function AddListenerToCards(){
             // console.log('____DragDrop Functions____ ' )
             //dragDrop.log(event)
             dragDrop.drag(event);
+
         });
     });
 }
@@ -100,6 +101,37 @@ function  addDatabaseRecord(object) {
   objectStoreRequest.onsuccess = (event) => {
     console.log(event);
   }
+}
+
+//Update object to IndexDB
+function  putDatabaseRecord(taskID) {
+
+  let object = taskList.tasks.find(({ id }) => id ==  taskID);
+  console.log('putDatabaseRecord called')
+
+  //Create Transaction
+  let transaction = db.transaction( ['tasklist'], 'readwrite');
+
+
+  //Create request to put data in to Store via transaction
+  let request = transaction.objectStore('tasklist');
+  request.onerror = e => callback(e.target.error);
+  request.onsuccess = e => callback(e.target.result);
+  
+
+  transaction.oncomplete = (event) => {
+    console.log("Transaction completed: database modification finished.");
+}
+
+//Now we can create the Store (some refer to this as the table)
+const objectStore = transaction.objectStore('tasklist');
+
+
+//Add the Object to the Store
+const objectStoreRequest = objectStore.put(object)
+objectStoreRequest.onsuccess = (event) => {
+  console.log(event);
+}
 }
 
 //get the IndexDb records and update the Tasklist Array
@@ -150,6 +182,8 @@ window.addEventListener('load', (event) => {
     document.querySelectorAll(".task-column").forEach(column => {
         column.addEventListener("drop", function(event) {
             dragDrop.drop(event)
+            taskList.updateTaskStatus(dragDrop.selectedTask, dragDrop.placedStatus);
+            putDatabaseRecord(dragDrop.selectedTask);
             });
         column.addEventListener("dragover", function(event) {
             dragDrop.allowDrop(event)
@@ -162,7 +196,6 @@ window.addEventListener('load', (event) => {
     taskList.render();
     AddListenerToCards();
 });
-
 
 // @listener - event listener  - Save Button Clicked
 document.getElementById("create").addEventListener("click", function() {
@@ -232,4 +265,4 @@ document.addEventListener("click", function(e) {
 // @listener - event listener - Delete Storage
 // document.getElementById("clear").addEventListener("click", function() {
 //    database.deleteDB();
-// });
+// })
