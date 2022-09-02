@@ -1,0 +1,97 @@
+body {
+    background-color: #0093E9;
+    background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%); 
+}
+
+h1, h2, h3, h4, h5, h6, h6, p, ul, li{
+    color:#FFF !important; 
+    text-align: left !important; 
+    font-family: 'Roboto Condensed', sans-serif; 
+}
+
+input {
+    background-color: #FFF; 
+    border-radius:5px;  
+    height:20px !important;  
+    border: none;
+    padding: 13px !important;
+}
+
+button {
+    background-color: #4158D0;
+    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+    border-radius:5px !important;
+    border: none;
+    height:26px;
+    width:40px;
+    margin:5px !important;
+    color: #FFF;
+}
+
+button:hover {
+    background-color: #4158D0;
+    background-image: linear-gradient(43deg, #4158D0 40%, #C850C0 86%, #FFCC70 100%);
+}
+
+hr {
+    border: 1px solid #FFF;
+    color:#FFF !important; 
+    opacity: 0.9 !important; 
+}
+
+.done-task { 
+    color: #FFF;
+    text-align: center;
+    margin: 0px !important; 
+    height: auto;
+}
+.task-meta-data {
+    color:#FFF !important; 
+    text-align: left !important; 
+    margin: 0px !important; 
+    padding: 0px !important; 
+    font-size: 11px !important; 
+}
+.card {
+    margin-top:5px;
+}
+
+.input-area {
+    width: 100%;
+}
+
+
+.listArea {
+      height: 100vh !important;
+}
+.card-body{
+background-color: #0093E9;
+border-radius:5px !important;
+border: 1px solid #FFF;
+margin: 3px;
+padding: 8px !important;
+}
+
+.task-column{
+/* background-color: #4158D0; */
+/* background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%); */
+border-radius:5px !important;
+padding: 3px !important;
+border-left: 1px solid #fff;
+}
+
+.title { 
+    margin-top: 20px; 
+}
+
+#task-input {
+    width: 70%;
+}
+
+
+#download {
+    font-size: 15px;
+    font-weight: bolder;
+    padding-bottom: 3px;
+    color: #FFF;
+}
