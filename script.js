@@ -121,17 +121,48 @@ function  putDatabaseRecord(taskID) {
 
   transaction.oncomplete = (event) => {
     console.log("Transaction completed: database modification finished.");
+  }
+
+  //Now we can create the Store (some refer to this as the table)
+  const objectStore = transaction.objectStore('tasklist');
+
+
+  //Add the Object to the Store
+  const objectStoreRequest = objectStore.put(object);
+  objectStoreRequest.onsuccess = (event) => {
+    console.log(event);
+  }
 }
 
-//Now we can create the Store (some refer to this as the table)
-const objectStore = transaction.objectStore('tasklist');
+//Remove object to IndexDB
+function  deleteDatabaseRecord(taskID) {
+
+  let object = taskList.tasks.find(({ id }) => id ==  taskID);
+  console.log('putDatabaseRecord called')
+
+  //Create Transaction
+  let transaction = db.transaction( ['tasklist'], 'readwrite');
 
 
-//Add the Object to the Store
-const objectStoreRequest = objectStore.put(object)
-objectStoreRequest.onsuccess = (event) => {
-  console.log(event);
-}
+  //Create request to put data in to Store via transaction
+  let request = transaction.objectStore('tasklist');
+  request.onerror = e => callback(e.target.error);
+  request.onsuccess = e => callback(e.target.result);
+  
+
+  transaction.oncomplete = (event) => {
+    console.log("Transaction completed: database modification finished.");
+  }
+
+  //Now we can create the Store (some refer to this as the table)
+  const objectStore = transaction.objectStore('tasklist');
+
+
+  //Add the Object to the Store
+  const objectStoreRequest = objectStore.delete(taskID);
+  objectStoreRequest.onsuccess = (event) => {
+    console.log(event);
+  }
 }
 
 //get the IndexDb records and update the Tasklist Array
@@ -165,11 +196,6 @@ function  getAllDatabaseRecord(id) {
     taskList.render();
     AddListenerToCards();
   }
-
-  
-  console.log(taskList.tasks);
-
-
 }
 
 //EVENT LISTENERS
@@ -184,9 +210,11 @@ window.addEventListener('load', (event) => {
             dragDrop.drop(event)
             taskList.updateTaskStatus(dragDrop.selectedTask, dragDrop.placedStatus);
             putDatabaseRecord(dragDrop.selectedTask);
+            
             });
         column.addEventListener("dragover", function(event) {
-            dragDrop.allowDrop(event)
+            dragDrop.allowDrop(event);
+            
         });
     });
 
@@ -255,10 +283,22 @@ document.addEventListener('keypress', function (e) {
 //Delete Tasks
 document.addEventListener("click", function(e) {
    
+  //simpler to filter out click events than to add event listners on every render and deal with DOM timings
   if(e.target.className !== "done-task") {    return;  }
 
-  console.log(e.target.dataset.id);
-  taskList.removeTask(e.target.dataset.id);
+  //get the id from the html
+  let taskid = parseInt(e.target.dataset.taskid );
+  console.log( taskid );
+
+  //remove from b=global obj
+   taskList.removeTask( taskid );
+
+   // remove from DB
+   deleteDatabaseRecord( taskid );
+
+   //update UI
+   taskList.render();
+
 });
 
 

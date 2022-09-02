@@ -8,10 +8,10 @@
 */
 class ToDo {
     constructor(task, id) {
+        this.id = id;
         this.task = task;
         this.created = new Date().toLocaleDateString('en-GB');
-        this.status = 'To Do';
-        this.id = id;
+        this.status = 'To Do';       
     }   
     markDone(task) {
         this.status = 'Done';
