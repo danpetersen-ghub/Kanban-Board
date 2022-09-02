@@ -32,7 +32,9 @@ class dragDrop {
         let data = ev.dataTransfer.getData("text");
         ev.target.appendChild(document.getElementById(data));
         document.getElementById(data).style.border = "none";
-        this.placedStatus = ev.originalTarget.dataset.status; 
+        // console.log('drag drop - drop method Obj is:')
+        // console.log(ev.srcElement.attributes["data-status"].value)
+        this.placedStatus = ev.srcElement.attributes["data-status"].value; 
         console.log(this);
 
       }
