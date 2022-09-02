@@ -7,12 +7,14 @@ const taskList = new TaskList();
 //const database = new IndexDB();
 const dragDrop = new dragDropModule() ;
 
+console.log("App Loading...")
+
 /*
 indexDB Example from: 
 https://github.com/mdn/to-do-notifications/blob/gh-pages/scripts/todo.js
 */
 // Hold an instance of a db object for us to store the IndexedDB data in
-var db;
+let db;
 
  // Let us open our database
 const DBOpenRequest = window.indexedDB.open('Tasks', 4);
@@ -24,15 +26,18 @@ DBOpenRequest.onsuccess = (event) => {
 
     //pull existing IndexDB records to our Tasklist
     getAllDatabaseRecord();
+
+    //Load APP
+    pageLoad();
 };
 
 DBOpenRequest.onupgradeneeded = (event) => {
-
+  console.log('onupgradeneeded is called')
     //return the promise result for future use 
     db = event.target.result;
 
     db.onerror = (event) => {
-      note.appendChild(createListItem('Error loading database.'));
+      console.log('Error loading database.');
     };
 
     // Create an objectStore for this database
@@ -42,8 +47,19 @@ DBOpenRequest.onupgradeneeded = (event) => {
     objectStore.createIndex('id', 'id', { unique: true});
 
     //pull existing IndexDB records to our Tasklist
-    getAllDatabaseRecord();
+   // getAllDatabaseRecord();
+
+    // Load APP
+    // pageLoad();
+    location.reload(); 
+    
   };
+
+    // Register two event handlers to act on the database being opened successfully, or not
+    DBOpenRequest.onerror = (event) => {
+      console.log('Error loading database.');
+    };
+
 
 //SCOPE
 const Scope = { 
@@ -152,6 +168,7 @@ function  deleteDatabaseRecord(taskID) {
 
   transaction.oncomplete = (event) => {
     console.log("Transaction completed: database modification finished.");
+    
   }
 
   //Now we can create the Store (some refer to this as the table)
@@ -201,29 +218,32 @@ function  getAllDatabaseRecord(id) {
 //EVENT LISTENERS
 
 //@listener - event listener  - Page Load
-window.addEventListener('load', (event) => {
-    console.log('page is fully loaded');
+function pageLoad() {
+  console.log('page is fully loaded');
 
-    // ondrop="dragDrop.drop(event)" ondragover="dragDrop.allowDrop(event)">
-    document.querySelectorAll(".task-column").forEach(column => {
-        column.addEventListener("drop", function(event) {
-            dragDrop.drop(event)
-            taskList.updateTaskStatus(dragDrop.selectedTask, dragDrop.placedStatus);
-            putDatabaseRecord(dragDrop.selectedTask);
-            
-            });
-        column.addEventListener("dragover", function(event) {
-            dragDrop.allowDrop(event);
-            
-        });
-    });
+  // ondrop="dragDrop.drop(event)" ondragover="dragDrop.allowDrop(event)">
+  document.querySelectorAll(".task-column").forEach(column => {
+      column.addEventListener("drop", function(event) {
+          dragDrop.drop(event)
+          taskList.updateTaskStatus(dragDrop.selectedTask, dragDrop.placedStatus);
+          putDatabaseRecord(dragDrop.selectedTask);
+          
+          });
+      column.addEventListener("dragover", function(event) {
+          dragDrop.allowDrop(event);
+          
+      });
+  });
 
-    let userInput = document.getElementById("task-input");
-    userInput.value = "";
+  let userInput = document.getElementById("task-input");
+  userInput.value = "";
 
-    taskList.render();
-    AddListenerToCards();
-});
+  taskList.render();
+  AddListenerToCards();
+// });
+
+}
+
 
 // @listener - event listener  - Save Button Clicked
 document.getElementById("create").addEventListener("click", function() {
