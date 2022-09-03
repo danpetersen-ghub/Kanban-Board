@@ -31,7 +31,19 @@ class TaskList {
         console.log(this.tasks);
     }
     nextId(task) {
-        return this.tasks.length + 1;
+
+
+        let currentLargest = 0;
+
+        for(task of this.tasks) {
+            if (currentLargest < task.id) {
+                currentLargest = task.id
+            }
+        }
+        console.log(currentLargest)
+        return  currentLargest + 1; 
+
+       // return this.tasks.length + 1;
     }
     updateTaskStatus(taskID, status){
         let selected = this.tasks.find(({ id }) => id ==  taskID);

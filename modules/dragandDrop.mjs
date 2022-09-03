@@ -36,7 +36,6 @@ class dragDrop {
         // console.log(ev.srcElement.attributes["data-status"].value)
         this.placedStatus = ev.srcElement.attributes["data-status"].value; 
         console.log(this);
-
       }
 
       log = () => {
