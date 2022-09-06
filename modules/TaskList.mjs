@@ -1,10 +1,12 @@
 /*
 @class TaskList
-@param {array} tasks - the array of tasks
+@Data {array} tasks - the array of tasks
 @method addTask(task) - adds a task to the array
 @method removeTask(task) - removes a task from the array
+@method log() -  Console log the task list
+@method nextId() - loop through task list, find the largest ID return the ID+1 
+@method updateTaskStatus() - take and ID and update the status with whatever status is defined in the 2nd Param
 @method render() - renders the array to the screen
-
 */
 
 class TaskList {
@@ -30,8 +32,22 @@ class TaskList {
     log() {
         console.log(this.tasks);
     }
-    nextId(task) {
-        return this.tasks.length + 1;
+    nextId() {
+
+        // Save the value
+        let currentLargest = 0;
+
+        //Loop through the tasklist and return the highest
+        for(task of this.tasks) {
+            if (currentLargest < task.id) {
+                currentLargest = task.id
+            }
+        }
+        console.log(currentLargest)
+        //return the highest value and add 1 to it
+        return  currentLargest + 1; 
+
+       // return this.tasks.length + 1;
     }
     updateTaskStatus(taskID, status){
         let selected = this.tasks.find(({ id }) => id ==  taskID);
