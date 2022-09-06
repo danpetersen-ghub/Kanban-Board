@@ -38,7 +38,7 @@ class TaskList {
         let currentLargest = 0;
 
         //Loop through the tasklist and return the highest
-        for(task of this.tasks) {
+        for (const task of this.tasks) {
             if (currentLargest < task.id) {
                 currentLargest = task.id
             }
