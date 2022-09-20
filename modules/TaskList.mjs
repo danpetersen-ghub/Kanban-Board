@@ -38,7 +38,7 @@ class TaskList {
         let currentLargest = 0;
 
         //Loop through the tasklist and return the highest
-        for (const task of this.tasks) {
+        for(const task of this.tasks) {
             if (currentLargest < task.id) {
                 currentLargest = task.id
             }
@@ -79,7 +79,7 @@ class TaskList {
             return `                    
             <div id="${task.id}" class="card text-center" draggable="true"  >
             <div  class="card-body" > 
-                <p class="card-text">${task.task}</p>                         
+                <p class="card-text" contenteditable="true" >${task.task}</p>                         
                 <p class="task-meta-data">
                 ID: ${task.id}, Created:  ${task.created} <br>
                 Status: ${task.status} <br>
