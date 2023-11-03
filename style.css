@@ -1,18 +1,27 @@
 body {
     background-color: #0093E9;
-    background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%); 
+    background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
 }
 
-h1, h2, h3, h4, h5, h6, h6, p, ul, li{
-    color:#FFF !important; 
-    text-align: left !important; 
-    font-family: 'Roboto Condensed', sans-serif; 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h6,
+p,
+ul,
+li {
+    color: #FFF !important;
+    text-align: left !important;
+    font-family: 'Roboto Condensed', sans-serif;
 }
 
 input {
-    background-color: #FFF; 
-    border-radius:5px;  
-    height:20px !important;  
+    background-color: #FFF;
+    border-radius: 5px;
+    height: 20px !important;
     border: none;
     padding: 13px !important;
 }
@@ -20,11 +29,11 @@ input {
 button {
     background-color: #4158D0;
     background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
-    border-radius:5px !important;
+    border-radius: 5px !important;
     border: none;
-    height:26px;
-    width:40px;
-    margin:5px !important;
+    height: 26px;
+    width: 40px;
+    margin: 5px !important;
     color: #FFF;
 }
 
@@ -35,25 +44,27 @@ button:hover {
 
 hr {
     border: 1px solid #FFF;
-    color:#FFF !important; 
-    opacity: 0.9 !important; 
+    color: #FFF !important;
+    opacity: 0.9 !important;
 }
 
-.done-task { 
+.done-task {
     color: #FFF;
     text-align: center;
-    margin: 0px !important; 
+    margin: 0px !important;
     height: auto;
 }
+
 .task-meta-data {
-    color:#FFF !important; 
-    text-align: left !important; 
-    margin: 0px !important; 
-    padding: 0px !important; 
-    font-size: 11px !important; 
+    color: #FFF !important;
+    text-align: left !important;
+    margin: 0px !important;
+    padding: 0px !important;
+    font-size: 11px !important;
 }
+
 .card {
-    margin-top:5px;
+    margin-top: 3px;
 }
 
 .input-area {
@@ -62,26 +73,27 @@ hr {
 
 
 .listArea {
-      height: 100vh !important;
-}
-.card-body{
-background-color: #0093E9;
-border-radius:5px !important;
-border: 1px solid #FFF;
-margin: 3px;
-padding: 8px !important;
+    height: 100vh !important;
 }
 
-.task-column{
-/* background-color: #4158D0; */
-/* background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%); */
-border-radius:5px !important;
-padding: 3px !important;
-border-left: 1px solid #fff;
+.card-body {
+    background-color: #0093E9;
+    border-radius: 5px !important;
+    border: 1px solid #FFF;
+    margin: 2px;
+    padding: 4px !important;
 }
 
-.title { 
-    margin-top: 20px; 
+.task-column {
+    /* background-color: #4158D0; */
+    /* background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%); */
+    border-radius: 5px !important;
+    padding: 3px !important;
+    border-left: 1px solid #fff;
+}
+
+.title {
+    margin-top: 20px;
 }
 
 #task-input {
